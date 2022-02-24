@@ -66,7 +66,7 @@ def list_all():
 
 
 @bp.route('/<playlist_id>', methods=['GET'])
-def get_song(playlist_id):
+def get_playlist(playlist_id):
     global database
     if playlist_id in database:
         value = database[playlist_id]
@@ -87,11 +87,10 @@ def get_song(playlist_id):
 
 
 @bp.route('/', methods=['POST'])
-def create_song():
+def create_playlist():
     global database
     try:
         content = request.get_json()
-        print(content)
         PlaylistName = content['PlaylistName']
         SongTitles = [x.strip() for x in content['SongTitles'].split(",")]
     except Exception:
@@ -105,9 +104,8 @@ def create_song():
     }
     return response
 
-
 @bp.route('/<playlist_id>', methods=['DELETE'])
-def delete_song(playlist_id):
+def delete_playlist(playlist_id):
     global database
     if playlist_id in database:
         del database[playlist_id]
@@ -119,6 +117,44 @@ def delete_song(playlist_id):
         return app.make_response((response, 404))
     return {}
 
+
+@bp.route('/addsong', methods=['PATCH'])
+def add_songs():
+    global database
+    try:
+        content = request.get_json()
+        playlist_id = content['PlaylistName']
+        PlaylistName = database[playlist_id][0]
+        SongTitles = database[playlist_id][1]
+        SongTitles += [x.strip() for x in content['SongTitles'].split(",")]
+    except Exception:
+        return app.make_response(
+            ({"Message": "Error reading arguments"}, 400)
+            )
+    database[playlist_id] = (PlaylistName, SongTitles)
+    response = {
+        "playlist_id": playlist_id
+    }
+    return response
+
+@bp.route('/deletesong', methods=['DELETE'])
+def delete_songs():
+    global database
+    try:
+        content = request.get_json()
+        playlist_id = content['PlaylistName']
+        PlaylistName = database[playlist_id][0]
+        SongTitles = database[playlist_id][1]
+        SongTitles = [x for x in SongTitles if x not in content['SongTitles'].split(",")]
+    except Exception:
+        return app.make_response(
+            ({"Message": "Error reading arguments"}, 400)
+            )
+    database[playlist_id] = (PlaylistName, SongTitles)
+    response = {
+        "playlist_id": playlist_id
+    }
+    return response
 
 @bp.route('/test', methods=['GET'])
 def test():

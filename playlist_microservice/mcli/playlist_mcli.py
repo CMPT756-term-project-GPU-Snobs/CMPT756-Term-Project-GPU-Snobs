@@ -127,7 +127,7 @@ Enter 'help' for command list.
             'SongTitles': args[1]
         }
         r = requests.post(
-            url,
+            url, 
             json=payload,
             headers={'Authorization': DEFAULT_AUTH}
         )
@@ -135,17 +135,16 @@ Enter 'help' for command list.
 
     def do_delete(self, arg):
         """
-        Delete a song.
+        Delete a playlist.
 
         Parameters
         ----------
-        song: music_id
-            The music_id of the song to delete.
+        song: playlist_id
+            The playlist_id of the playlist to delete.
 
         Examples
         --------
         delete 6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea
-            Delete "The Last Great American Dynasty".
         """
         url = get_url(self.name, self.port)
         print(url)
@@ -153,6 +152,66 @@ Enter 'help' for command list.
             url+arg.strip(),
             headers={'Authorization': DEFAULT_AUTH}
             )
+        if r.status_code != 200:
+            print("Non-successful status code:", r.status_code)
+
+    def do_addsongs(self, arg):
+        """
+        Add song to playlist.
+
+        Parameters
+        ----------
+        PlaylistName: string
+            The playlist uuid (needs to be surrounded by '')
+        SongName: string
+            The name of songs to add, split by ","
+
+        Examples
+        --------
+        addsongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock'
+        addsongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock, beat it, jingle bells'
+        """
+        url = get_url(self.name, self.port)
+        args = parse_quoted_strings(arg)
+        payload = {
+            'PlaylistName': args[0],
+            'SongTitles': args[1]
+        }
+        r = requests.patch(
+            url + "addsong",
+            json=payload,
+            headers={'Authorization': DEFAULT_AUTH}
+        )
+        print(r.json())
+        
+
+    def do_deletesongs(self, arg):
+        """
+        Delete song in playlist.
+
+        Parameters
+        ----------
+        PlaylistName: string
+            The playlist uuid (needs to be surrounded by '')
+        SongName: string
+            The name of songs to delete, split by ","
+
+        Examples
+        --------
+        deletesongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock'
+        deletesongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock, beat it, jingle bells'
+        """
+        url = get_url(self.name, self.port)
+        args = parse_quoted_strings(arg)
+        payload = {
+            'PlaylistName': args[0],
+            'SongTitles': args[1]
+        }
+        r = requests.delete(
+            url + "deletesong",
+            json=payload,
+            headers={'Authorization': DEFAULT_AUTH}
+        )
         if r.status_code != 200:
             print("Non-successful status code:", r.status_code)
 
