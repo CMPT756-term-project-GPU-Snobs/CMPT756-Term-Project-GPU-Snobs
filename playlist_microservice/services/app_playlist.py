@@ -1,6 +1,6 @@
 """
 SFU CMPT 756
-Sample STANDALONE application---music service.
+Sample STANDALONE application---playlist service.
 """
 
 # Standard library modules
@@ -17,15 +17,10 @@ from flask import Flask
 from flask import request
 
 #SAMPLE DATABASE CREATION
-# The path to the file (CSV format) containing the sample data
-DB_PATH = './data/music.csv'
+DB_PATH = './data/playlists.json'
 
 if not os.path.isdir('data'):
     os.mkdir('data')
-
-# with open(DB_PATH, mode='a') as f: 
-#     if os.path.getsize(DB_PATH) == 0:
-#         f.write("Artist,SongTitle,UUID\n")
 
 # The unique exercise code
 # The EXER environment variable has a value specific to this exercise
@@ -34,14 +29,13 @@ ucode = '123'
 # The application
 
 app = Flask(__name__)
-
 bp = Blueprint('app', __name__)
 
 database = {}
 
 def load_db():
     global database
-    with open('./data/playlists.json', 'r') as f:
+    with open(DB_PATH, 'r') as f:
         rdr = json.load(f)
         for id, data in rdr.items():
             print("here")
@@ -97,8 +91,9 @@ def create_song():
     global database
     try:
         content = request.get_json()
+        print(content)
         PlaylistName = content['PlaylistName']
-        SongTitles = content['SongTitles']
+        SongTitles = [x.strip() for x in content['SongTitles'].split(",")]
     except Exception:
         return app.make_response(
             ({"Message": "Error reading arguments"}, 400)
@@ -143,7 +138,7 @@ def shutdown():
     return {}
 
 
-app.register_blueprint(bp, url_prefix='/api/v1/music/')
+app.register_blueprint(bp, url_prefix='/api/v1/playlist/')
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:

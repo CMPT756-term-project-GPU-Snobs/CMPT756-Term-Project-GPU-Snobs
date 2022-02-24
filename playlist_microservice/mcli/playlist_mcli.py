@@ -1,5 +1,5 @@
 """
-Simple command-line interface to music service
+Simple command-line interface to playlist service
 """
 
 # Standard library modules
@@ -18,22 +18,22 @@ DEFAULT_AUTH = 'Bearer A'
 def parse_args():
     argp = argparse.ArgumentParser(
         'mcli',
-        description='Command-line query interface to music service'
+        description='Command-line query interface to playlist service'
         )
     argp.add_argument(
         'name',
-        help="DNS name or IP address of music server"
+        help="DNS name or IP address of playlist server"
         )
     argp.add_argument(
         'port',
         type=int,
-        help="Port number of music server"
+        help="Port number of playlist server"
         )
     return argp.parse_args()
 
 
 def get_url(name, port):
-    return "http://{}:{}/api/v1/music/".format(name, port)
+    return "http://{}:{}/api/v1/playlist/".format(name, port)
 
 
 def parse_quoted_strings(arg):
@@ -55,7 +55,7 @@ class Mcli(cmd.Cmd):
         cmd.Cmd.__init__(self)
         self.prompt = 'mql: '
         self.intro = """
-Command-line interface to music service.
+Command-line interface to playlist service.
 Enter 'help' for command list.
 'Tab' character autocompletes commands.
 """
@@ -123,8 +123,8 @@ Enter 'help' for command list.
         url = get_url(self.name, self.port)
         args = parse_quoted_strings(arg)
         payload = {
-            'Artist': args[0],
-            'SongTitle': args[1]
+            'PlaylistName': args[0],
+            'SongTitles': args[1]
         }
         r = requests.post(
             url,
@@ -148,6 +148,7 @@ Enter 'help' for command list.
             Delete "The Last Great American Dynasty".
         """
         url = get_url(self.name, self.port)
+        print(url)
         r = requests.delete(
             url+arg.strip(),
             headers={'Authorization': DEFAULT_AUTH}
