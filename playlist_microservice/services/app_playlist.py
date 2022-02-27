@@ -119,14 +119,14 @@ def delete_playlist(playlist_id):
 
 
 @bp.route('/addsong', methods=['PATCH'])
-def add_songs():
+def add_song():
     global database
     try:
         content = request.get_json()
         playlist_id = content['PlaylistName']
         PlaylistName = database[playlist_id][0]
         SongTitles = database[playlist_id][1]
-        SongTitles += [x.strip() for x in content['SongTitles'].split(",")]
+        SongTitles += [content['SongTitles']]
     except Exception:
         return app.make_response(
             ({"Message": "Error reading arguments"}, 400)
@@ -138,14 +138,14 @@ def add_songs():
     return response
 
 @bp.route('/deletesong', methods=['DELETE'])
-def delete_songs():
+def delete_song():
     global database
     try:
         content = request.get_json()
         playlist_id = content['PlaylistName']
         PlaylistName = database[playlist_id][0]
         SongTitles = database[playlist_id][1]
-        SongTitles = [x for x in SongTitles if x not in content['SongTitles'].split(",")]
+        SongTitles.remove(content['SongTitles'])
     except Exception:
         return app.make_response(
             ({"Message": "Error reading arguments"}, 400)

@@ -1,6 +1,8 @@
 To run MCLI + service locally
 
 1. start microservice
+- CD to services
+- run the following
     - python app_playlist.py 8080
 
 2. start mcli

@@ -155,7 +155,7 @@ Enter 'help' for command list.
         if r.status_code != 200:
             print("Non-successful status code:", r.status_code)
 
-    def do_addsongs(self, arg):
+    def do_addsong(self, arg):
         """
         Add song to playlist.
 
@@ -164,12 +164,11 @@ Enter 'help' for command list.
         PlaylistName: string
             The playlist uuid (needs to be surrounded by '')
         SongName: string
-            The name of songs to add, split by ","
+            The name of the song to add
 
         Examples
         --------
-        addsongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock'
-        addsongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock, beat it, jingle bells'
+        addsong '01063f0c-db0a-4cf9-8090-2dcbc44ebf1c' '21 Guns'
         """
         url = get_url(self.name, self.port)
         args = parse_quoted_strings(arg)
@@ -185,7 +184,7 @@ Enter 'help' for command list.
         print(r.json())
         
 
-    def do_deletesongs(self, arg):
+    def do_deletesong(self, arg):
         """
         Delete song in playlist.
 
@@ -194,12 +193,11 @@ Enter 'help' for command list.
         PlaylistName: string
             The playlist uuid (needs to be surrounded by '')
         SongName: string
-            The name of songs to delete, split by ","
+            The name of song to delete
 
         Examples
         --------
-        deletesongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock'
-        deletesongs '6ecfafd0-8a35-4af6-a9e2-cbd79b3abeea' 'jailhouse rock, beat it, jingle bells'
+        deletesong '01063f0c-db0a-4cf9-8090-2dcbc44ebf1c' '21 Guns'
         """
         url = get_url(self.name, self.port)
         args = parse_quoted_strings(arg)
