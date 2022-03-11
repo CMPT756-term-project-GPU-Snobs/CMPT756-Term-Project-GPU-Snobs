@@ -82,6 +82,19 @@ def create_playlist():
     }
     return response
 
+@bp.route('/<playlist_id>', methods=['DELETE'])
+def delete_playlist(playlist_id):
+    global database
+    if playlist_id in database:
+        del database[playlist_id]
+    else:
+        response = {
+            "Count": 0,
+            "Items": []
+        }
+        return app.make_response((response, 404))
+    return {}
+
 @bp.route('/addsong', methods=['PATCH'])
 def add_song():
     global database
