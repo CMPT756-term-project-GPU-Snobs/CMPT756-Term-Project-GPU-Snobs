@@ -30,7 +30,7 @@ ISTIO_NS=istio-system
 RELEASE=c756
 
 
-default: start appns s1 s2
+default: start provision
 
 start:
 	minikube delete
