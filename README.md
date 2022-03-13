@@ -1,6 +1,20 @@
 # CMPT756-Term-Project-GPU-Snobs
 
+## Service Running instructions
+Follow the instructions below to get the project running on your local machine. Please note that these instructions were tested on linux x86 machine and Macos x86. <br> <br>
 
+#### 1. Make sure that your are in the CMPT756-Term-Project-GPU-Snobs directory. <br> <br>
+#### 2. Add following information to **.ec2.mak file** in the cli_shortcuts directory
+- your AWS security group ID
+- Name of the EC2 key
+- Path to the .pem file including the name
+
+
+#### 3. Make sure to create a personal access token (PAT) for your GitHub account. You will need the three scopes: read:packages, write:packages and delete:packages. Save the token in the cluster/ghcr.io-token.txt file <br> <br>
+
+#### 4. Run **./tools/shell.sh** file
+
+#### 5. run **make all** command to start the service
 // Project Commands
 
 // Start service
