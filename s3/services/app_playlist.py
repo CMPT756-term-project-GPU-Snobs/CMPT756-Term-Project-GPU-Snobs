@@ -117,6 +117,7 @@ def delete_playlist(playlist_id):
         return app.make_response((response, 404))
     return {}
 
+
 @bp.route('/addsong', methods=['PATCH'])
 def add_song():
     global database
