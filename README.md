@@ -33,6 +33,9 @@
 
 ## Push image service s3 to ghcr
 
+0. direct to s3 folder
+  - `cd s3`
+
 1. Build the image
   - docker image build --platform linux/amd64 -t cmpt756s3 .
 
