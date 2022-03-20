@@ -15,79 +15,64 @@ import json
 from flask import Blueprint
 from flask import Flask
 from flask import request
+from flask import Response
 
-#SAMPLE DATABASE CREATION
-DB_PATH = './data/playlists.json'
+from prometheus_flask_exporter import PrometheusMetrics
 
-if not os.path.isdir('data'):
-    os.mkdir('data')
+import requests
 
-# The unique exercise code
-# The EXER environment variable has a value specific to this exercise
-ucode = '123'
+import simplejson as json
 
+PERCENT_ERROR = 50
 # The application
 
 app = Flask(__name__)
+
+metrics = PrometheusMetrics(app)
+metrics.info('app_info', 'Playlist process')
+
+db = {
+    "name": "http://cmpt756db:30002/api/v1/datastore",
+    "endpoint": [
+        "read",
+        "write",
+        "delete",
+        "update"
+    ]
+}
+
 bp = Blueprint('app', __name__)
-
-database = {}
-
-def load_db():
-    global database
-    with open(DB_PATH, 'r') as f:
-        rdr = json.load(f)
-        for id, data in rdr.items():
-            print("here")
-            playlist_name, songs = data
-            database[id] = (playlist_name, songs)
 
 
 @bp.route('/health')
+@metrics.do_not_track()
 def health():
-    return ""
+    return Response("", status=200, mimetype="application/json")
 
 
 @bp.route('/readiness')
+@metrics.do_not_track()
 def readiness():
-    return ""
+    return Response("", status=200, mimetype="application/json")
 
 
 @bp.route('/', methods=['GET'])
 def list_all():
-    global database
-    response = {
-        "Count": len(database),
-        "Items":
-            [{'PlaylistName': value[0], 'SongTitles': value[1], 'playlist_id': id}
-             for id, value in database.items()]
-    }
-    return response
-
-@bp.route('/<playlist_id>', methods=['GET'])
-def get_playlist(playlist_id):
-    global database
-    if playlist_id in database:
-        value = database[playlist_id]
-        response = {
-            "Count": 1,
-            "Items":
-                [{'PlaylistName': value[0],
-                  'SongTitles': value[1],
-                  'playlist_id': playlist_id}]
-        }
-    else:
-        response = {
-            "Count": 0,
-            "Items": []
-        }
-        return app.make_response((response, 404))
-    return response
-
+    headers = request.headers
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    # TODO: Implement list_all
+    return {}
 
 @bp.route('/', methods=['POST'])
 def create_playlist():
-    global database
+    headers = request.headers
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
     try:
         content = request.get_json()
         PlaylistName = content['PlaylistName']
@@ -97,82 +82,29 @@ def create_playlist():
             ({"Message": "Error reading arguments"}, 400)
             )
     playlist_id = str(uuid.uuid4())
-    database[playlist_id] = (PlaylistName, SongTitles)
-    response = {
-        "playlist_id": playlist_id
-    }
-    return response
+    url = db['name'] + '/' + db['endpoint'][1]
+    response = requests.post(
+        url,
+        json={"objtype": "playlist", "playlistid": playlist_id, "genre": "Rock", "playlist": ["song1", "song2"]},
+        headers={'Authorization': headers['Authorization']})
     
+    return (response.json())
 
 @bp.route('/<playlist_id>', methods=['DELETE'])
 def delete_playlist(playlist_id):
-    global database
-    if playlist_id in database:
-        del database[playlist_id]
-    else:
-        response = {
-            "Count": 0,
-            "Items": []
-        }
-        return app.make_response((response, 404))
-    return {}
+    headers = request.headers
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    
+    url = db['name'] + '/' + db['endpoint'][2]
+    response = requests.delete(
+        url,
+        json={"objtype": "playlist", "playlistid": playlist_id},
+        headers={'Authorization': headers['Authorization']})
 
-
-@bp.route('/addsong', methods=['PATCH'])
-def add_song():
-    global database
-    try:
-        content = request.get_json()
-        playlist_id = content['PlaylistName']
-        PlaylistName = database[playlist_id][0]
-        SongTitles = database[playlist_id][1]
-        SongTitles += [content['SongTitles']]
-    except Exception:
-        return app.make_response(
-            ({"Message": "Error reading arguments"}, 400)
-            )
-    database[playlist_id] = (PlaylistName, SongTitles)
-    response = {
-        "playlist_id": playlist_id
-    }
-    return response
-
-@bp.route('/deletesong', methods=['DELETE'])
-def delete_song():
-    global database
-    try:
-        content = request.get_json()
-        playlist_id = content['PlaylistName']
-        PlaylistName = database[playlist_id][0]
-        SongTitles = database[playlist_id][1]
-        SongTitles.remove(content['SongTitles'])
-    except Exception:
-        return app.make_response(
-            ({"Message": "Error reading arguments"}, 400)
-            )
-    database[playlist_id] = (PlaylistName, SongTitles)
-    response = {
-        "playlist_id": playlist_id
-    }
-    return response
-
-@bp.route('/test', methods=['GET'])
-def test():
-    # This value is for user scp756-221
-    if ('123' != ucode):
-        raise Exception("Test failed")
-    return {}
-
-
-@bp.route('/shutdown', methods=['GET'])
-def shutdown():
-    # From https://stackoverflow.com/questions/15562446/how-to-stop-flask-application-without-using-ctrl-c # noqa: E501
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-    return {}
-
+    return (response.json())
 
 app.register_blueprint(bp, url_prefix='/api/v1/playlist/')
 
@@ -181,7 +113,5 @@ if __name__ == '__main__':
         logging.error("missing port arg 1")
         sys.exit(-1)
 
-    load_db()
-    app.logger.error("Unique code: {}".format(ucode))
     p = int(sys.argv[1])
     app.run(host='0.0.0.0', port=p, threaded=True)

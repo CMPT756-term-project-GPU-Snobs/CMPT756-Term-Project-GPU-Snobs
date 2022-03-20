@@ -155,93 +155,93 @@ Enter 'help' for command list.
         if r.status_code != 200:
             print("Non-successful status code:", r.status_code)
 
-    def do_addsong(self, arg):
-        """
-        Add song to playlist.
+    # def do_addsong(self, arg):
+    #     """
+    #     Add song to playlist.
 
-        Parameters
-        ----------
-        PlaylistName: string
-            The playlist uuid (needs to be surrounded by '')
-        SongName: string
-            The name of the song to add
+    #     Parameters
+    #     ----------
+    #     PlaylistName: string
+    #         The playlist uuid (needs to be surrounded by '')
+    #     SongName: string
+    #         The name of the song to add
 
-        Examples
-        --------
-        addsong '01063f0c-db0a-4cf9-8090-2dcbc44ebf1c' '21 Guns'
-        """
-        url = get_url(self.name, self.port)
-        args = parse_quoted_strings(arg)
-        payload = {
-            'PlaylistName': args[0],
-            'SongTitles': args[1]
-        }
-        r = requests.patch(
-            url + "addsong",
-            json=payload,
-            headers={'Authorization': DEFAULT_AUTH}
-        )
-        print(r.json())
+    #     Examples
+    #     --------
+    #     addsong '01063f0c-db0a-4cf9-8090-2dcbc44ebf1c' '21 Guns'
+    #     """
+    #     url = get_url(self.name, self.port)
+    #     args = parse_quoted_strings(arg)
+    #     payload = {
+    #         'PlaylistName': args[0],
+    #         'SongTitles': args[1]
+    #     }
+    #     r = requests.patch(
+    #         url + "addsong",
+    #         json=payload,
+    #         headers={'Authorization': DEFAULT_AUTH}
+    #     )
+    #     print(r.json())
         
 
-    def do_deletesong(self, arg):
-        """
-        Delete song in playlist.
+    # def do_deletesong(self, arg):
+    #     """
+    #     Delete song in playlist.
 
-        Parameters
-        ----------
-        PlaylistName: string
-            The playlist uuid (needs to be surrounded by '')
-        SongName: string
-            The name of song to delete
+    #     Parameters
+    #     ----------
+    #     PlaylistName: string
+    #         The playlist uuid (needs to be surrounded by '')
+    #     SongName: string
+    #         The name of song to delete
 
-        Examples
-        --------
-        deletesong '01063f0c-db0a-4cf9-8090-2dcbc44ebf1c' '21 Guns'
-        """
-        url = get_url(self.name, self.port)
-        args = parse_quoted_strings(arg)
-        payload = {
-            'PlaylistName': args[0],
-            'SongTitles': args[1]
-        }
-        r = requests.delete(
-            url + "deletesong",
-            json=payload,
-            headers={'Authorization': DEFAULT_AUTH}
-        )
-        if r.status_code != 200:
-            print("Non-successful status code:", r.status_code)
+    #     Examples
+    #     --------
+    #     deletesong '01063f0c-db0a-4cf9-8090-2dcbc44ebf1c' '21 Guns'
+    #     """
+    #     url = get_url(self.name, self.port)
+    #     args = parse_quoted_strings(arg)
+    #     payload = {
+    #         'PlaylistName': args[0],
+    #         'SongTitles': args[1]
+    #     }
+    #     r = requests.delete(
+    #         url + "deletesong",
+    #         json=payload,
+    #         headers={'Authorization': DEFAULT_AUTH}
+    #     )
+    #     if r.status_code != 200:
+    #         print("Non-successful status code:", r.status_code)
 
-    def do_quit(self, arg):
-        """
-        Quit the program.
-        """
-        return True
+    # def do_quit(self, arg):
+    #     """
+    #     Quit the program.
+    #     """
+    #     return True
 
-    def do_test(self, arg):
-        """
-        Run a test stub on the music server.
-        """
-        url = get_url(self.name, self.port)
-        r = requests.get(
-            url+'test',
-            headers={'Authorization': DEFAULT_AUTH}
-            )
-        if r.status_code != 200:
-            print("Non-successful status code:", r.status_code)
+    # def do_test(self, arg):
+    #     """
+    #     Run a test stub on the music server.
+    #     """
+    #     url = get_url(self.name, self.port)
+    #     r = requests.get(
+    #         url+'test',
+    #         headers={'Authorization': DEFAULT_AUTH}
+    #         )
+    #     if r.status_code != 200:
+    #         print("Non-successful status code:", r.status_code)
 
-    def do_shutdown(self, arg):
-        """
-        Tell the music cerver to shut down.
-        """
-        url = get_url(self.name, self.port)
-        r = requests.get(
-            url+'shutdown',
-            headers={'Authorization': DEFAULT_AUTH}
-            )
-        if r.status_code != 200:
-            print("Non-successful status code:", r.status_code)
+    # def do_shutdown(self, arg):
+    #     """
+    #     Tell the music cerver to shut down.
+    #     """
+    #     url = get_url(self.name, self.port)
+    #     r = requests.get(
+    #         url+'shutdown',
+    #         headers={'Authorization': DEFAULT_AUTH}
+    #         )
+    #     if r.status_code != 200:
+    #         print("Non-successful status code:", r.status_code)
 
 
 if __name__ == '__main__':
