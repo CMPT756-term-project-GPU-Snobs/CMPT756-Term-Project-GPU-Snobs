@@ -66,22 +66,6 @@ def list_all():
     # TODO: Implement list_all
     return {}
 
-@bp.route('/<music_id>', methods=['GET'])
-def get_song(music_id):
-    headers = request.headers
-    # check header here
-    if 'Authorization' not in headers:
-        return Response(json.dumps({"error": "missing auth"}),
-                        status=401,
-                        mimetype='application/json')
-    payload = {"objtype": "music", "objkey": music_id}
-    url = db['name'] + '/' + db['endpoint'][0]
-    response = requests.get(
-        url,
-        params=payload,
-        headers={'Authorization': headers['Authorization']})
-    return (response.json())
-
 @bp.route('/', methods=['POST'])
 def create_playlist():
     headers = request.headers
