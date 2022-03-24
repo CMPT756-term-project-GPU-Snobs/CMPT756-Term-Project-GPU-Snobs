@@ -57,7 +57,7 @@
 
 ## Manually Deploy the service to cluster
 
-1. Replace line 59 of s3.yaml with the following
+1. Replace line 59 of s3.yaml with the following (replace REGID here as well)
 
   - image: 'ghcr.io/REGID/cmpt756s3:v1'
 
