@@ -20,7 +20,7 @@ set_kubectl_context:
 	make -f k8s.mak provision kubectl config set-context --current --namespace=c756ns
 
 prevision_services:
-	make -f k8s.mak provision
+	make -f k8s.mak provision ; kubectl config set-context --current --namespace=c756ns
 
 print_grafana_url:
 	make -f k8s.mak grafana-url
@@ -54,3 +54,14 @@ move_eks_ctl:
 	sudo mv /tmp/eksctl /usr/local/bin
 check_eks_ctl_version:
 	eksctl version
+download_istio:
+	curl -L https://istio.io/downloadIstio | sh -
+	
+istio_path:
+	export PATH=$(PWD)/istio-1.13.2/bin:$(PATH)
+install_istio:
+	istioctl install --set profile=demo -y
+	kubectl label namespace default istio-injection=enabled
+
+install_dependencies:
+	sh install_dependencies.sh
