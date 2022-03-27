@@ -19,8 +19,12 @@ Default output format [None]: json
 - Make sure that istio is installed by executing following command
 >istioctl
 4. NOTE: if you were missing any of the dependencies and had to istall it, make sure to stay in the same terminal window when running the service
+5. Make sure that "logs/gw.log" has rwx priveleges
+6. In the "cluster" directory make sure that "ghcr.io-token.txt" file has your token value
+7. Rename "cluster/tpl-vars-blank.txt" file to "cluster/tpl-vars.txt" and fill out all the required fields
 
-
+## Single Command Run Services
+> make all
 
 ## Preliminary Set up (Before scripts)
 1. Start service
