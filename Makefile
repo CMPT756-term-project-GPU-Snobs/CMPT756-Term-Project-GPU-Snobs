@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-all: cli_shortcuts cluster_permissions start_service set_kubectl_context prevision_services print_grafana_url create_gatling_music change_gatling_music_permissions
+all: start_service prevision_services prevision_context print_grafana_url
 
 cli_shortcut:
 	cp cli_shortcuts/.aws-a ~/
@@ -20,7 +20,10 @@ set_kubectl_context:
 	make -f k8s.mak provision kubectl config set-context --current --namespace=c756ns
 
 prevision_services:
-	make -f k8s.mak provision ; kubectl config set-context --current --namespace=c756ns
+	make -f k8s.mak provision
+
+prevision_context:
+	kubectl config set-context --current --namespace=c756ns
 
 print_grafana_url:
 	make -f k8s.mak grafana-url
