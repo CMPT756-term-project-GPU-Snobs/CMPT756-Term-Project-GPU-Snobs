@@ -12,7 +12,7 @@ eksctl version
 
 #installing istio depency
 curl -L https://istio.io/downloadIstio | sh -
-export PATH=$PWD/istio-1.13.2/bin:$PATH
+export PATH=$HOME/istio-1.13.2/bin:$PATH
 
 #install helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
