@@ -2,6 +2,30 @@
 
 # Project Commands
 
+## Preliminary Requirement
+1. Make sure that aws cli is installed, if not follow the instruction in the link below
+  - https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
+2. Login to aws, by using following command
+> $ aws configure <br>
+AWS Access Key ID [None]: accesskey <br>
+AWS Secret Access Key [None]: secretkey <br>
+Default region name [None]: us-west-2 <br>
+Default output format [None]: json
+3. Check if all the dependencies are installed.
+- Make sure that k8s is installed by executing following command
+>kubectl version --client
+- Make sure that eks is installed by executing following command
+>eksctl version
+- Make sure that istio is installed by executing following command
+>istioctl
+4. NOTE: if you were missing any of the dependencies and had to istall it, make sure to stay in the same terminal window when running the service
+5. Make sure that "logs/gw.log" has rwx priveleges
+6. In the "cluster" directory make sure that "ghcr.io-token.txt" file has your token value
+7. Rename "cluster/tpl-vars-blank.txt" file to "cluster/tpl-vars.txt" and fill out all the required fields
+
+## Single Command Run Services
+> make all
+
 ## Preliminary Set up (Before scripts)
 1. Start service
   - make -f eks.mak start
