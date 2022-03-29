@@ -5,3 +5,5 @@ allclouds.mak
 api.mak
 .DS_Store
 __pycache__
+eks.mak
+k8s.mak
