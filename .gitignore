@@ -7,3 +7,6 @@ k8s.mak
 eks.mak
 .DS_Store
 __pycache__
+eks.mak
+k8s.mak
+k8scopy.mak

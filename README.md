@@ -57,17 +57,20 @@ Default output format [None]: json
 
 ## Push image service s3 to ghcr
 
+0. Cd to s3 folder
+  - cd s3
+
 1. Build the image
   - docker image build --platform linux/amd64 -t cmpt756s3 .
 
 2. Login to ghcr
-  - cat ../cluster/ghcr.io-token.txt | docker login ghcr.io -u <REGID> --password-stdin
+  - cat ../cluster/ghcr.io-token.txt | docker login ghcr.io -u `<REGID>` --password-stdin
 
-3. Tag the image (Replace REGID)
-  - docker image tag cmpt756s3 ghcr.io/<REGID>/cmpt756s3:v1
+3. Tag the image
+  - docker image tag cmpt756s3 ghcr.io/`<REGID>`/cmpt756s3:v1
 
 4. Push the image
-  - docker image push ghcr.io/<REGID>/cmpt756s3:v1
+  - docker image push ghcr.io/`<REGID>`/cmpt756s3:v1
 
 5. Validate that the image is updated in github
 
@@ -76,5 +79,3 @@ Default output format [None]: json
 ## Manually Deploy the service to cluster
 
   - kubectl -n c756ns apply -f cluster/s3.yaml | tee logs/s3.log
-
-

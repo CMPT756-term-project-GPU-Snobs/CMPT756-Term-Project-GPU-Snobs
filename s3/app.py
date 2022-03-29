@@ -85,9 +85,24 @@ def create_playlist():
     url = db['name'] + '/' + db['endpoint'][1]
     response = requests.post(
         url,
-        json={"objtype": "playlist", "playlistid": playlist_id, "genre": "Rock", "playlist": ["song1", "song2"]},
+        json={"objtype": "playlist", "playlistid": playlist_id, "genre": "Rock", "playlist": ["song1", "song2", "song3"]},
         headers={'Authorization': headers['Authorization']})
     
+    return (response.json())
+
+@bp.route('/<UUID>', methods=['GET'])
+def read_playlist(UUID):
+    headers = request.headers
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    payload = {"objtype": "playlist", "objkey": UUID}
+    url = db['name'] + '/' + db['endpoint'][0]
+    response = requests.get(
+        url,
+        params=payload,
+        headers={'Authorization': headers['Authorization']})
     return (response.json())
 
 # @bp.route('/<playlist_id>', methods=['DELETE'])
