@@ -3,5 +3,7 @@ mk.mak
 gcp.mak
 allclouds.mak
 api.mak
+k8s.mak
+eks.mak
 .DS_Store
 __pycache__
