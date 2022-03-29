@@ -9,3 +9,4 @@ eks.mak
 __pycache__
 eks.mak
 k8s.mak
+k8scopy.mak
