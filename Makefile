@@ -1,5 +1,8 @@
 SHELL := /bin/bash
-all: start_service prevision_services prevision_context print_grafana_url
+old_all: start_service prevision_services prevision_context print_grafana_url print_kiali_url
+
+all:
+	sh start_services.sh
 
 cli_shortcut:
 	cp cli_shortcuts/.aws-a ~/
@@ -28,6 +31,12 @@ prevision_context:
 print_grafana_url:
 	make -f k8s.mak grafana-url
 
+print_kiali_url:
+	make -f k8s.mak kiali-url
+
+generate_templates:
+	make -f k8s-tpl.mak templates
+
 create_gatling_music:
 	vim -> #!/usr/bin/env bash docker container run --detach --rm
 	-v ${PWD}/gatling/results:/opt/gatling/results
@@ -43,28 +52,18 @@ create_gatling_music:
 change_gatling_music_permissions:
 	chmod u+x gatling-1-music.sh
 
-test_print:
-	echo "Test is working"
 
 install_kubctl:
-	curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-	sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-	kubectl version --client
+	sh install_dependencies k8s
 	
 install_eks_ctl:
-	curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-move_eks_ctl:
-	sudo mv /tmp/eksctl /usr/local/bin
-check_eks_ctl_version:
-	eksctl version
-download_istio:
-	curl -L https://istio.io/downloadIstio | sh -
-	
-istio_path:
-	export PATH=$(PWD)/istio-1.13.2/bin:$(PATH)
+	sh install_dependencies eks
+
 install_istio:
-	istioctl install --set profile=demo -y
-	kubectl label namespace default istio-injection=enabled
+	sh install_dependencies istio
+
+install_helm:
+	sh install_dependencies helm 
 
 install_dependencies:
 	sh install_dependencies.sh
