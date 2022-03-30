@@ -69,11 +69,11 @@ provision: istio prom deploy kiali
 # --- deploy: Deploy and monitor the three microservices
 # Use `provision` to deploy the entire stack (including Istio, Prometheus, ...).
 # This target only deploys the sample microservices
-deploy: appns gw s1 s2 db monitoring
+deploy: appns gw s1 s2 db s3 monitoring
 	$(KC) -n $(APP_NS) get gw,vs,deploy,svc,pods
 
 # --- rollout: Rollout new deployments of all microservices
-rollout: rollout-s1 rollout-s2 rollout-db
+rollout: rollout-s1 rollout-s2 rollout-db rollout-s3
 
 # --- rollout-s1: Rollout a new deployment of S1
 rollout-s1: s1
@@ -87,6 +87,9 @@ rollout-s2: $(LOG_DIR)/s2-$(S2_VER).repo.log  cluster/s2-dpl-$(S2_VER).yaml
 # --- rollout-db: Rollout a new deployment of DB
 rollout-db: db
 	$(KC) rollout -n $(APP_NS) restart deployment/cmpt756db
+
+rollout-s3: s3
+	$(KC) rollout -n $(APP_NS) restart deployment/cmpt756s3
 
 # --- health-off: Turn off the health monitoring for the three microservices
 # If you don't know exactly why you want to do this---don't
@@ -109,7 +112,7 @@ scratch: clean
 
 # --- clean: Delete all the application log files
 clean:
-	/bin/rm -f $(LOG_DIR)/{s1,s2,db,gw,monvs}*.log $(LOG_DIR)/rollout*.log
+	/bin/rm -f $(LOG_DIR)/{s1,s2,db,gw,s3,monvs}*.log $(LOG_DIR)/rollout*.log
 
 # --- dashboard: Start the standard Kubernetes dashboard
 # NOTE:  Before invoking this, the dashboard must be installed and a service account created
@@ -135,6 +138,8 @@ log-s2:
 log-db:
 	$(KC) -n $(APP_NS) logs deployment/cmpt756db --container cmpt756db
 
+log-s3:
+	$(KC) -n $(APP_NS) logs deployment/cmpt756s3 --container cmpt756s3
 
 # --- shell-X: hint for shell into a particular service
 shell-s1:
@@ -296,6 +301,11 @@ db: $(LOG_DIR)/db.repo.log cluster/awscred.yaml cluster/dynamodb-service-entry.y
 	$(KC) -n $(APP_NS) apply -f cluster/db-sm.yaml | tee -a $(LOG_DIR)/db.log
 	$(KC) -n $(APP_NS) apply -f cluster/db-vs.yaml | tee -a $(LOG_DIR)/db.log
 
+s3: cluster/s3.yaml cluster/s3-sm.yaml cluster/s3-vs.yaml
+	$(KC) -n $(APP_NS) apply -f cluster/s3.yaml | tee $(LOG_DIR)/s3.log
+	$(KC) -n $(APP_NS) apply -f cluster/s3-sm.yaml | tee -a $(LOG_DIR)/s3.log
+	$(KC) -n $(APP_NS) apply -f cluster/s3-vs.yaml | tee -a $(LOG_DIR)/s3.log
+	
 # Build & push the images up to the CR
 cri: $(LOG_DIR)/s1.repo.log $(LOG_DIR)/s2-$(S2_VER).repo.log $(LOG_DIR)/db.repo.log
 

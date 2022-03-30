@@ -24,6 +24,7 @@ import requests
 import simplejson as json
 
 PERCENT_ERROR = 50
+ucode = 123
 # The application
 
 app = Flask(__name__)
@@ -63,8 +64,22 @@ def list_all():
         return Response(json.dumps({"error": "missing auth"}),
                         status=401,
                         mimetype='application/json')
-    # TODO: Implement list_all
     return {}
+
+@bp.route('/<UUID>', methods=['GET'])
+def read_playlist(UUID):
+    headers = request.headers
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
+    payload = {"objtype": "playlist", "objkey": UUID}
+    url = db['name'] + '/' + db['endpoint'][0]
+    response = requests.get(
+        url,
+        params=payload,
+        headers={'Authorization': headers['Authorization']})
+    return (response.json())
 
 @bp.route('/', methods=['POST'])
 def create_playlist():
@@ -85,78 +100,33 @@ def create_playlist():
     url = db['name'] + '/' + db['endpoint'][1]
     response = requests.post(
         url,
-        json={"objtype": "playlist", "playlistid": playlist_id, "genre": "Rock", "playlist": ["song1", "song2"]},
+        json={"objtype": "playlist", "playlistid": playlist_id, "genre": "Rock", "playlist": ["song1", "song2", "song3"]},
         headers={'Authorization': headers['Authorization']})
     
     return (response.json())
 
-# @bp.route('/<playlist_id>', methods=['DELETE'])
-# def delete_playlist(playlist_id):
-#     global database
-#     if playlist_id in database:
-#         del database[playlist_id]
-#     else:
-#         response = {
-#             "Count": 0,
-#             "Items": []
-#         }
-#         return app.make_response((response, 404))
-#     return {}
+@bp.route('/<UUID>', methods=['DELETE'])
+def delete_playlist(UUID):
+    headers = request.headers
+    # check header here
+    if 'Authorization' not in headers:
+        return Response(json.dumps({"error": "missing auth"}),
+                        status=401,
+                        mimetype='application/json')
 
-# @bp.route('/addsong', methods=['PATCH'])
-# def add_song():
-#     global database
-#     try:
-#         content = request.get_json()
-#         playlist_id = content['PlaylistName']
-#         PlaylistName = database[playlist_id][0]
-#         SongTitles = database[playlist_id][1]
-#         SongTitles += [content['SongTitles']]
-#     except Exception:
-#         return app.make_response(
-#             ({"Message": "Error reading arguments"}, 400)
-#             )
-#     database[playlist_id] = (PlaylistName, SongTitles)
-#     response = {
-#         "playlist_id": playlist_id
-#     }
-#     return response
+    url = db['name'] + '/' + db['endpoint'][2]
+    response = requests.delete(
+        url,
+        params={"objtype": "playlist", "objkey": UUID},
+        headers={'Authorization': headers['Authorization']})
+    return (response.json())
 
-# @bp.route('/deletesong', methods=['DELETE'])
-# def delete_song():
-#     global database
-#     try:
-#         content = request.get_json()
-#         playlist_id = content['PlaylistName']
-#         PlaylistName = database[playlist_id][0]
-#         SongTitles = database[playlist_id][1]
-#         SongTitles.remove(content['SongTitles'])
-#     except Exception:
-#         return app.make_response(
-#             ({"Message": "Error reading arguments"}, 400)
-#             )
-#     database[playlist_id] = (PlaylistName, SongTitles)
-#     response = {
-#         "playlist_id": playlist_id
-#     }
-#     return response
-
-# @bp.route('/test', methods=['GET'])
-# def test():
-#     # This value is for user scp756-221
-#     if ('123' != ucode):
-#         raise Exception("Test failed")
-#     return {}
-
-
-# @bp.route('/shutdown', methods=['GET'])
-# def shutdown():
-#     # From https://stackoverflow.com/questions/15562446/how-to-stop-flask-application-without-using-ctrl-c # noqa: E501
-#     func = request.environ.get('werkzeug.server.shutdown')
-#     if func is None:
-#         raise RuntimeError('Not running with the Werkzeug Server')
-#     func()
-#     return {}
+@bp.route('/test', methods=['GET'])
+def test():
+    # This is a test value set at top of script
+    if (123 != ucode):
+        raise Exception("Test failed")
+    return {}
 
 
 app.register_blueprint(bp, url_prefix='/api/v1/playlist/')
