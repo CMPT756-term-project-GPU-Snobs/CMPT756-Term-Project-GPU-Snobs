@@ -3,6 +3,7 @@
 # Project Commands
 
 ## Preliminary Requirement
+- **Note** the services were tested on Ubuntu, to get the best results make sure to run on the same OS 
 1. Make sure that aws cli is installed, if not follow the instruction in the link below
   - https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 2. Login to aws, by using following command
@@ -18,7 +19,18 @@ Default output format [None]: json
 >eksctl version
 - Make sure that istio is installed by executing following command
 >istioctl
-4. NOTE: if you were missing any of the dependencies and had to istall it, make sure to stay in the same terminal window when running the service
+- Make sure that helm is installed by executing following command
+> helm
+4. NOTE: if you were missing any of the dependencies and had to istall it, make sure to stay in the same terminal window when running the service and you are in the following directory "CMPT756-Term-Project-GPU-Snobs"
+- To install kubkectl run
+> make install_kubctl
+- To install eksctl run
+> make install_eks_ctl
+- To install istio run
+> make install_istio
+- To install helm run
+> make install_helm
+
 5. Make sure that "logs/gw.log" has rwx priveleges
 6. In the "cluster" directory make sure that "ghcr.io-token.txt" file has your token value
 7. Rename "cluster/tpl-vars-blank.txt" file to "cluster/tpl-vars.txt" and fill out all the required fields
