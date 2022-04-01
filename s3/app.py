@@ -90,8 +90,9 @@ def create_playlist():
                         mimetype='application/json')
     try:
         content = request.get_json()
-        PlaylistName = content['PlaylistName']
-        SongTitles = [x.strip() for x in content['SongTitles'].split(",")]
+        playlistname = content['playlistname']
+        genre = content['genre']
+        song = content['song']
     except Exception:
         return app.make_response(
             ({"Message": "Error reading arguments"}, 400)
@@ -100,9 +101,8 @@ def create_playlist():
     url = db['name'] + '/' + db['endpoint'][1]
     response = requests.post(
         url,
-        json={"objtype": "playlist", "playlistid": playlist_id, "genre": "Rock", "playlist": ["song1", "song2", "song3"]},
+        json = {"objtype": "playlist", "playlistname": playlistname, "genre": genre, "song": song, "UUID": playlist_id},
         headers={'Authorization': headers['Authorization']})
-    
     return (response.json())
 
 @bp.route('/<UUID>', methods=['DELETE'])
