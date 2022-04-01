@@ -78,6 +78,13 @@ spec:
       - name: cmpt756db
         image: 'ZZ-CR-ID/ZZ-REG-ID/cmpt756db:v1'
         imagePullPolicy: Always
+        resources:
+          limits:
+            cpu: "100m"
+            memory: "1000i"
+          requests:
+            cpu: "100m"
+            memory: "50Mi"
         env:
         - name: SVC_LOADER_TOKEN
           valueFrom:
