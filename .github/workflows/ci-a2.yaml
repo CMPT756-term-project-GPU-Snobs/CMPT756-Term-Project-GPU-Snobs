@@ -18,6 +18,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        
+      - name: Determine the canonical owner
+        run: |
+          tools/find-canonical-owner.sh $GITHUB_REPOSITORY ${{ github.repository_owner }} >> $GITHUB_ENV
 
       - name: Install docker-compose v2.2.2
         # As of Dec 2021, the only way to guarantee that we have docker-compose v2.2.2 is to install it ourselves
