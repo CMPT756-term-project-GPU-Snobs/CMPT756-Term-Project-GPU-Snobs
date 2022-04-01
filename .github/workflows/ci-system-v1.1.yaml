@@ -40,8 +40,3 @@ jobs:
         run: |
           sed -e "s/ZZ-REG-ID=.*/ZZ-REG-ID=${{ github.repository_owner }}/" cluster/tpl-vars-blank.txt > cluster/tpl-vars.txt
           make -f k8s-tpl.mak templates
-
-      - name: Run CI test
-        run: |
-          cd ci
-          COMPOSE_PATH=../tools/docker-compose-v2 ./runci.sh v1.1
