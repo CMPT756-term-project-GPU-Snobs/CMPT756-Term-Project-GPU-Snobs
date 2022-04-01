@@ -57,7 +57,7 @@ spec:
       containers:
       - name: cmpt756s1
         image: 'ZZ-CR-ID/ZZ-REG-ID/cmpt756s1:v1'
-        imagePullPolicy: Always
+        imagePullPolicy: Always        
         ports:
         - containerPort: 30000
         livenessProbe:
@@ -76,3 +76,8 @@ spec:
           timeoutSeconds: 2
           successThreshold: 1
           failureThreshold: 5
+        resources:
+          limits:
+            cpu: "400m"
+          requests:
+            cpu: "100m"
