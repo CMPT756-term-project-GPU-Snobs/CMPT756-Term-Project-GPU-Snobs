@@ -10,6 +10,7 @@ import os
 import sys
 import uuid
 import json
+import traceback
 
 # Installed packages
 from flask import Blueprint
@@ -90,18 +91,19 @@ def create_playlist():
                         mimetype='application/json')
     try:
         content = request.get_json()
-        playlistname = content['playlistname']
+        playlistname = content['playlist_name']
         genre = content['genre']
-        song = content['song']
+        songs = content['songs']
     except Exception:
         return app.make_response(
-            ({"Message": "Error reading arguments"}, 400)
+            #({"Message": "Error reading arguments"}, 400)
+            (traceback.print_exc(), 400)
             )
     playlist_id = str(uuid.uuid4())
     url = db['name'] + '/' + db['endpoint'][1]
     response = requests.post(
         url,
-        json = {"objtype": "playlist", "playlistname": playlistname, "genre": genre, "song": song, "UUID": playlist_id},
+        json = {"objtype": "playlist", "playlist_name": playlistname, "genre": genre, "playlist": songs, "uuid": playlist_id},
         headers={'Authorization': headers['Authorization']})
     return (response.json())
 

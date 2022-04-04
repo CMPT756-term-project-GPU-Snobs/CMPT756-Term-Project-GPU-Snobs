@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Generate templates
+make -f k8s-tpl.mak templates
+
 # start services
 make -f eks.mak start
 

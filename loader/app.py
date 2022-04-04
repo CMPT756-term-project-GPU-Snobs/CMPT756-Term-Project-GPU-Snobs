@@ -73,11 +73,12 @@ def create_playlist(playlistid, genre, playlist, uuid):
     the old UUID is replaced with this one.
     """
     url = db['name'] + '/load'
+    print(playlistid, genre, playlist, uuid)
     response = requests.post(
         url,
         auth=build_auth(),
         json={"objtype": "playlist",
-              "playlist_id": playlistid,
+              "playlist_name": playlistid,
               "genre": genre,
               "playlist": playlist,
               "uuid": uuid})
@@ -132,7 +133,7 @@ if __name__ == '__main__':
                             genre.strip(),
                             playlist.strip(),
                             uuid.strip())
-            resp = check_resp(resp, 'music_id')
+            resp = check_resp(resp, 'playlist_id')
             if resp is None or resp != uuid:
                 print('Error creating song {} {}, {}'.format(artist,
                                                             title,

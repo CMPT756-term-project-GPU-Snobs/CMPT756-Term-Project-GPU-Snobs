@@ -2,7 +2,7 @@ SHELL := /bin/bash
 old_all: start_service prevision_services prevision_context print_grafana_url print_kiali_url
 
 all:
-	sh start_services.sh
+	sh create_services.sh
 
 cli_shortcut:
 	cp cli_shortcuts/.aws-a ~/
@@ -33,6 +33,10 @@ print_grafana_url:
 
 print_kiali_url:
 	make -f k8s.mak kiali-url
+
+initialize_istio:
+	echo "$HOME"
+	#export PATH=$(HOME)/istio-1.13.2/bin/:$(PATH)
 
 generate_templates:
 	make -f k8s-tpl.mak templates
