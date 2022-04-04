@@ -19,7 +19,7 @@ import music
 
 # The services check only that we pass an authorization,
 # not whether it's valid
-DUMMY_AUTH = 'Bearer A'
+DUMMY_AUTH = "Bearer A"
 
 
 def parse_args():
@@ -32,38 +32,26 @@ def parse_args():
         'user_url' and 'music_url'.
     """
     argp = argparse.ArgumentParser(
-        'ci_test',
-        description='Integration test of CMPT 756 sample application'
-        )
+        "ci_test", description="Integration test of CMPT 756 sample application"
+    )
+    argp.add_argument("user_address", help="DNS name or IP address of user service.")
+    argp.add_argument("user_port", type=int, help="Port number of user service.")
+    argp.add_argument("music_address", help="DNS name or IP address of music service.")
+    argp.add_argument("music_port", type=int, help="Port number of music service.")
     argp.add_argument(
-        'user_address',
-        help="DNS name or IP address of user service."
-        )
-    argp.add_argument(
-        'user_port',
-        type=int,
-        help="Port number of user service."
-        )
-    argp.add_argument(
-        'music_address',
-        help="DNS name or IP address of music service."
-        )
-    argp.add_argument(
-        'music_port',
-        type=int,
-        help="Port number of music service."
-        )
-    argp.add_argument(
-        'table_suffix',
+        "table_suffix",
         help="Suffix to add to table names (not including leading "
-             "'-').  If suffix is 'scp756-2022', the music table "
-             "will be 'Music-scp756-2022'."
+        "'-').  If suffix is 'scp756-2022', the music table "
+        "will be 'Music-scp756-2022'.",
     )
     args = argp.parse_args()
     args.user_url = "http://{}:{}/api/v1/user/".format(
-        args.user_address, args.user_port)
+        args.user_address, args.user_port
+    )
     args.music_url = "http://{}:{}/api/v1/music/".format(
-        args.music_address, args.music_port)
+        args.music_address, args.music_port
+    )
+    args.playlist_url = "http://{}:{}/api/v1/playlist".format(args.playlist)
     return args
 
 
@@ -96,11 +84,11 @@ def get_env_vars(args):
     Nothing
     """
     # These are required to be present
-    args.dynamodb_region = os.getenv('AWS_REGION')
-    args.access_key_id = os.getenv('AWS_ACCESS_KEY_ID')
-    args.secret_access_key = os.getenv('AWS_SECRET_ACCESS_KEY')
-    args.loader_token = os.getenv('SVC_LOADER_TOKEN')
-    args.dynamodb_url = os.getenv('DYNAMODB_URL')
+    args.dynamodb_region = os.getenv("AWS_REGION")
+    args.access_key_id = os.getenv("AWS_ACCESS_KEY_ID")
+    args.secret_access_key = os.getenv("AWS_SECRET_ACCESS_KEY")
+    args.loader_token = os.getenv("SVC_LOADER_TOKEN")
+    args.dynamodb_url = os.getenv("DYNAMODB_URL")
 
 
 def setup(args):
@@ -117,8 +105,8 @@ def setup(args):
         args.dynamodb_region,
         args.access_key_id,
         args.secret_access_key,
-        'Music-' + args.table_suffix,
-        'User-' + args.table_suffix
+        "Music-" + args.table_suffix,
+        "User-" + args.table_suffix,
     )
 
 
@@ -147,7 +135,7 @@ def run_test(args):
     This test is highly incomplete and needs substantial extension.
     """
     mserv = music.Music(args.music_url, DUMMY_AUTH)
-    artist, song = ('Mary Chapin Carpenter', 'John Doe No. 24')
+    artist, song = ("Mary Chapin Carpenter", "John Doe No. 24")
     trc, m_id = mserv.create(artist, song)
     if trc != 200:
         sys.exit(1)
@@ -160,7 +148,7 @@ def run_test(args):
     return trc
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     args = parse_args()
     get_env_vars(args)
     setup(args)
