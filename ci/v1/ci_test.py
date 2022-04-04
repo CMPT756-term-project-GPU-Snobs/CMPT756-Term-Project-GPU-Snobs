@@ -51,7 +51,6 @@ def parse_args():
     args.music_url = "http://{}:{}/api/v1/music/".format(
         args.music_address, args.music_port
     )
-    args.playlist_url = "http://{}:{}/api/v1/playlist".format(args.playlist)
     return args
 
 
