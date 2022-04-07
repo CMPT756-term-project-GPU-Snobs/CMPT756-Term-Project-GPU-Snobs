@@ -60,5 +60,5 @@ ${COMP} -f ${ver}/compose.yaml up --build --abort-on-container-exit --exit-code-
 # Return code from 'up' is the test result
 trc=$?
 # Shutdown and delete all the containers before returning
-${COMP} -f ${ver}/compose.yaml down
+#${COMP} -f ${ver}/compose.yaml down
 exit ${trc}
