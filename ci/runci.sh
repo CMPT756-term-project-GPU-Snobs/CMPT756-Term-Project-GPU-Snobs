@@ -62,4 +62,5 @@ trc=$?
 # Shutdown and delete all the containers before returning
 ${COMP} -f ${ver}/compose.yaml down
 #exit ${trc}
+#exit 1
 exit 1
