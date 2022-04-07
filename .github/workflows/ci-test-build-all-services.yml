@@ -7,6 +7,7 @@ on:
       - cluster/../*
       - cluster/*
       - db/*
+      - ci/*
       - s1/*
       - s3/*
       - s2/*
