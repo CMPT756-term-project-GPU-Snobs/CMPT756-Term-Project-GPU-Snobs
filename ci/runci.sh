@@ -61,4 +61,5 @@ ${COMP} -f ${ver}/compose.yaml up --build --abort-on-container-exit --exit-code-
 trc=$?
 # Shutdown and delete all the containers before returning
 ${COMP} -f ${ver}/compose.yaml down
-exit ${trc}
+#exit ${trc}
+exit 1
