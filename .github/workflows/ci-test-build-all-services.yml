@@ -67,5 +67,7 @@ jobs:
 
       - name: Run CI test
         run: |
+          pip3 install prometheus-client
+          pip3 install prometheus-client --upgrade
           cd ci
           COMPOSE_PATH=../tools/docker-compose-v2 ./runci.sh v1
