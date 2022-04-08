@@ -11,6 +11,7 @@ on:
       - s2/*
       - s2/v1/*
       - ci/v1/*
+      - ci/*
       - .github/workflows/ci-system-v1.yaml
 
 jobs:
