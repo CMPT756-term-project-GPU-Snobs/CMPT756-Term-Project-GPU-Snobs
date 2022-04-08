@@ -9,6 +9,9 @@ on:
       - db/*
       - s2/v1.1/*
       - ci/v1.1/*
+      - ci/*
+      - s3/*
+      - s2/*
       - .github/workflows/ci-system-v1.1.yaml
 
 jobs:
