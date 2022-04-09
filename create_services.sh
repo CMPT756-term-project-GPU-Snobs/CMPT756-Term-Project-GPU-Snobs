@@ -30,6 +30,9 @@ kubectl create -f ./cluster/10-s1-hpa.yaml
 # deploy autoscaling for s2 service
 kubectl create -f ./cluster/10-s2-hpa.yaml
 
+# deploy autoscaling for s3 service
+kubectl create -f ./cluster/10-s3-hpa.yaml
+
 # print grafana url
 make -f k8s.mak grafana-url
 
