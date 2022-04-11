@@ -3,7 +3,7 @@
 # Project Commands
 
 ## Preliminary Requirement
-- **Note** the services were tested on Ubuntu, to get the best results make sure to run on the same OS 
+- **Note** the services were tested on Ubuntu, to get the best results make sure to run on the same OS. Also if you would like to replicate our Grafana dashboard please import the dashboard we have in the **grafana-custom-dashboard** directory and change the pod id in the edit section.
 1. Make sure that aws cli is installed, if not follow the instruction in the link below
   - https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html
 2. Login to aws, by using following command
